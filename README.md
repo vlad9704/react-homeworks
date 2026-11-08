@@ -1,4 +1,4 @@
-# React Homeworks
+# React Homeworks — Владислав Воробьев
 
 Репозиторий с домашними заданиями
 по изучению React.
