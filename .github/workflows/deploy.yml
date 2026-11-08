@@ -1,0 +1,84 @@
+name: Deploy React Homeworks
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build all lessons
+        run: |
+          mkdir -p site
+
+          for lesson in module-*/lesson-*; do
+            if [ ! -f "$lesson/package.json" ]; then
+              continue
+            fi
+
+            echo "Building $lesson"
+
+            cd "$GITHUB_WORKSPACE/$lesson"
+
+            npm ci
+            npm run build -- --base=./
+
+            mkdir -p "$GITHUB_WORKSPACE/site/$lesson"
+            cp -a dist/. "$GITHUB_WORKSPACE/site/$lesson/"
+
+          done
+
+      - name: Create root index
+        run: |
+          cat > site/index.html <<'EOF'
+          <!DOCTYPE html>
+          <html lang="ru">
+          <head>
+            <meta charset="UTF-8">
+            <title>React Homeworks</title>
+          </head>
+          <body>
+            <h1>React Homeworks</h1>
+            <p>My React learning projects.</p>
+            <a href="./module-01/lesson-01/">Module 01 / Lesson 01</a>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
