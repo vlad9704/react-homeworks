@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 const Text = (props) => {
 	const {
@@ -12,6 +12,8 @@ const Text = (props) => {
 	const someText = useRef(null)
 
 	useEffect(() => {
+		console.log('Observer enabled');
+
 		const observer = new MutationObserver((mutations) => {
 			console.log(mutations);
 		});
@@ -23,16 +25,18 @@ const Text = (props) => {
 		})
 
 		return () => {
+			console.log('Observer disabled');
 			observer.disconnect()
 		};
 	}, []);
 
 	const changeText = () => {
-		someText.current.textContent = 'New text'
+		const target = someText.current.querySelector('.target-text')
+		target.textContent = 'New text'
 	}
 
 	return (
-		<>
+		<div ref={someText}>
 			<div>
 				<h2>{text}</h2>
 				<input
@@ -42,15 +46,15 @@ const Text = (props) => {
 			</div>
 			<div>-------------------------------------</div>
 			<div>
-				<div ref={someText}>Some text</div>
+				<div className='target-text'>Some text</div>
 				<button onClick={changeText}>Change text</button>
 			</div>
 			<div>-------------------------------------</div>
 			<div>
 				<h2>{title}</h2>
 			</div>
-		</>
+		</div>
 	);
 };
 
-export default memo(Text);
+export default Text;
