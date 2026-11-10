@@ -62,7 +62,8 @@ jobs:
 
       - name: Create root index
         run: |
-          cat > site/index.html <<'EOF'
+          {
+            cat <<'EOF'
           <!DOCTYPE html>
           <html lang="ru">
           <head>
@@ -71,11 +72,21 @@ jobs:
           </head>
           <body>
             <h1>React Homeworks</h1>
-            <p>My React learning projects.</p>
-            <a href="./module-01/lesson-01/">Module 01 / Lesson 01</a>
+            <ul>
+          EOF
+
+            for lesson in module-*/lesson-*; do
+              if [ -f "$GITHUB_WORKSPACE/site/$lesson/index.html" ]; then
+                echo "<li><a href='./$lesson/'>$lesson</a></li>"
+              fi
+            done
+
+            cat <<'EOF'
+            </ul>
           </body>
           </html>
           EOF
+          } > site/index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
