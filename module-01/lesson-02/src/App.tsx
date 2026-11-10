@@ -1,5 +1,17 @@
 import './App.css'
 
+type Course = {
+	id: string;
+	title: string;
+	category: string;
+	seats: number;
+	version: number;
+};
+
+type CourseCardProps = {
+	course: Course;
+};
+
 function App() {
 	const courses = [
 		{"id":"react","title":"React-интерфейсы","category":"frontend","seats":12,"version":1},
@@ -8,7 +20,7 @@ function App() {
 		{"id":"testing","title":"Проверка поведения UI","category":"quality","seats":5,"version":1}
 	]
 
-	function CourseCard({ course }) {
+	function CourseCard({ course }: CourseCardProps) {
 		const handleClick = () => {
 			localStorage.setItem('selected-course', course.id);
 		}
@@ -20,7 +32,7 @@ function App() {
 				<p>Свободные места: {course.seats}</p>
 				<button
 					onClick={handleClick}
-					disabled={!course.seats > 0}
+					disabled={course.seats <= 0}
 				>
 					Выбрать
 				</button>
@@ -37,8 +49,7 @@ function App() {
 				<CourseCard
 					key={course.id}
 					course={course}
-				>
-				</CourseCard>
+				/>
 			))}
 		</div>
 	)
