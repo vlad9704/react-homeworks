@@ -20,9 +20,12 @@ function App() {
 		{"id":"testing","title":"Проверка поведения UI","category":"quality","seats":5,"version":1}
 	]
 
+	console.log(localStorage.getItem('selected-course'))
+
 	function CourseCard({ course }: CourseCardProps) {
 		const handleClick = () => {
 			localStorage.setItem('selected-course', course.id);
+			console.log(localStorage.getItem('selected-course'))
 		}
 
 		return (
