@@ -1,15 +1,16 @@
 import {StrictMode, useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {BlockingSearch, DeferredSearch, TransitionSearch} from './SearchLabs.jsx';
+import {BlockingSearch, DeferredSearch, TransitionSearch, MyDeferredSearch} from './SearchLabs.jsx';
 import {PurityLab} from './PurityLab.jsx';
 import './styles.css';
 import OwnTransitionSearch from "./OwnTransitionSearch.jsx"
 
-const modes = {blocking: BlockingSearch, transition: TransitionSearch, deferred: DeferredSearch};
+const modes = {blocking: BlockingSearch, transition: TransitionSearch, deferred: DeferredSearch, myDeferred: MyDeferredSearch};
 const explanations = {
 	blocking: 'Ввод и список используют один state и обновляются со срочным приоритетом.',
 	transition: 'Input обновляется сразу; отдельное состояние списка меняется внутри startTransition.',
 	deferred: 'Input использует свежий state; список получает отложенную версию через useDeferredValue.',
+	myDeferred: 'Моя реализация с useDeferredValue.'
 };
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
 						<option value="blocking">Обычное обновление</option>
 						<option value="transition">useTransition</option>
 						<option value="deferred">useDeferredValue</option>
+						<option value="myDeferred">Моя реализация useDeferredValue</option>
 					</select>
 				</label>
 				<label>Итераций на карточку
@@ -55,4 +57,4 @@ function App() {
 	);
 }
 
-createRoot(document.getElementById('root')).render(<StrictMode><OwnTransitionSearch/></StrictMode>);
+createRoot(document.getElementById('root')).render(<StrictMode><App/></StrictMode>);

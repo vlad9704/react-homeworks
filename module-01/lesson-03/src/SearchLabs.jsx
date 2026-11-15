@@ -50,3 +50,36 @@ export function DeferredSearch({iterations}) {
 	return <SearchView text={text} shownQuery={deferredText} iterations={iterations}
 	                   pending={isStale} onChange={(event) => setText(event.target.value)}/>;
 }
+
+export function MyDeferredSearch({iterations}) {
+	const [text, setText] = useState('');
+	const deferredText = useDeferredValue(text);
+
+	const isStale = text !== deferredText;
+
+	return (
+		<div>
+			<h2>Моя реализация useDeferredValue</h2>
+
+			<input
+				type="search"
+				value={text}
+				onChange={(e) => setText(e.target.value)}
+				placeholder="Поиск курса..."
+			/>
+
+			{isStale && <p>Обновляем результаты...</p>}
+
+			<p>
+				Результаты по запросу: {deferredText || 'Все курсы'}
+			</p>
+
+			<div style={{opacity: isStale ? 0.5 : 1}}>
+				<Results
+					query={deferredText}
+					iterations={iterations}
+				/>
+			</div>
+		</div>
+	);
+}
