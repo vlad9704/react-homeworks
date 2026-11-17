@@ -57,4 +57,4 @@ function App() {
 	);
 }
 
-createRoot(document.getElementById('root')).render(<StrictMode><App/></StrictMode>);
+createRoot(document.getElementById('root')).render(<StrictMode><OwnTransitionSearch/></StrictMode>);
