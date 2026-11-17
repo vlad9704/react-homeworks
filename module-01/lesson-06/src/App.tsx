@@ -19,6 +19,7 @@ function App() {
 
 	const resetControlled = () => {
 		setControlledValue('');
+		setControlledFilter('');
 	};
 
 	// Неуправляемый фильтр
